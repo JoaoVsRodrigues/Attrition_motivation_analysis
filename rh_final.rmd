@@ -1,0 +1,117 @@
+```{r}
+setwd("E:\\Users\\João Vitor\\Desktop\\R dados\\RH")
+getwd()
+```
+Bibliotecas usadas
+```{r}
+library(lattice)
+```
+Entendendo os dados
+```{r}
+dados = read.csv("RH.csv", sep = ',', stringsAsFactors = TRUE, header = T)
+sum(is.na(dados))
+summary(dados$Attrition)
+head(dados)
+```
+Analisando a comparação de idade e demissão
+```{r}
+histogram(~Age | Attrition, data = dados, breaks = 20, col = "lightblue")
+densityplot(~Age | Attrition, data = dados, breaks = 20, col = 'blue')
+```
+De maneira clara, os trabalhadores mais jovens tendem a pedir mais demissão que os mais velhos, tendo pico entre 20 e 35 anos.
+
+Analisando o departamento e a relação com a demissão
+```{r}
+histogram(~Department | Attrition, data = dados, layout = c(1,2))
+```
+Fazendo a análise do gráfico, podemos ver que a parte de pesquisa e desenvolvimento é a mais expressiva desses dados, porém ela teve mais pessoas que nao se demitiram que
+em comparação com vendas, que teve 15% a mais de pessoas que se demitiram em comparação com as que não se demitiram, a parte de RH não teve nada expressivo ou passível de comentários.
+
+As questões relacionadas as gênero são um problema na nossa empresa?
+```{r}
+histogram(~Gender | Attrition, data = dados, col = "lightblue")
+```
+A maioria das pessoas que se demitiram foram homens
+Não me parece que as questões de machismo e salários menores chegou até a empresa em questão.
+
+A questão salarial entre homens e mulheres é um problema na empresa?
+```{r}
+histogram(~MonthlyIncome | Gender, data = dados)
+histogram(~Department | Gender, data = dados, layout = c(1,2))
+```
+Aparentemente os salários femininos e masculinos estão realmente balanceados, não existe uma diferença gritante quanto a quantia de um e outro.
+
+A questão de viagens atrapalha as demissões?
+```{r}
+histogram(~BusinessTravel | Attrition, data = dados, col = "lightblue")
+```
+O histograma claramente mostra um gráfico de pessoas que viajam frequentemente tendem a se demitir mais, quase 10% a mais, já as que não viajam tem uma quantidade de demissões muito baixa.
+
+A questão da distância de casa ao trabalho demonstra de forma expressiva que é um problema quando se fala em demissões?
+```{r}
+histogram(~DistanceFromHome | Attrition, data = dados, breaks = 30, col = "lightblue")
+```
+Claramente pessoas que moram mais longe do trabalho tendem a se demitir mais, fica mais claro ainda no gráfico a seguir.
+```{r}
+densityplot(~DistanceFromHome | Attrition, data = dados, breaks = 30, col = "blue")
+```
+Com a linha de densidade do histograma anterior podemos ver claramente o quanto isso influencia nas demissões.
+
+O tempo trabalhado na empresa influencia nas demissões?
+```{r}
+histogram(~YearsAtCompany | Attrition, data = dados, col = "lightblue", breaks = 20)
+```
+Gráfico de densidade do histograma acima
+```{r}
+densityplot(~YearsAtCompany | Attrition, data = dados, col = 'blue', lwd = 2)
+```
+Claramente temos um problema de pessoas nos seus primeiros anos de empresa, isso é um problema claro.
+
+Esses dois gráficos nos mostram de maneira patente o quanto o tempo de empresa influencia os funcionários ficarem ou não na empresa.
+
+Tentar manter nossos trabalhadores mais confortáveis nos primeiros anos de empresa pode ser uma solução para as demissões da empresa, isso tem uma influencia muito grande.
+
+As pesquisas de satisfações da nossa empresa são eficientes em descobrir quem vai se demitir ou não?
+```{r}
+histogram(~JobSatisfaction | Attrition, data = dados, breaks = 4, col = "lightblue")
+histogram(~JobSatisfaction | Department, data = dados, breaks = 4)
+```
+AS pesquisas sobre satisfação demonstram uma realidade quanto a satisfação real de nossos funcionários. A Grande maioria que deu uma nota de satisfação baixa realmente saiu da empresa, enquanto quem deu uma nota mais alta, permaneceu.
+
+Porém ao analisarmos os departamentos com maior quantidade de notas baixas, temos o RH, o setor que menos teve demissões na empresa, talvez a baixa nota de satisfação do RH tenha a ver com o volume alto de demissões repentinas de outros setores? 
+Ao analisarmos as notas das vendas, temos também os maiores valores de notas máximas, talvez nossos vendedores estivessem felizes com as vendas mas tristes com o alto volume de trabalho?
+
+A quantidade de horas trabalhadas influencia muito nas demissões?
+```{r}
+histogram(~HourlyRate | Attrition, data = dados, breaks = 20, col = "lightblue")
+densityplot(~HourlyRate | Attrition, data = dados, breaks = 20, col = "blue")
+```
+Parece que nosso maior problema de demissões é entre as pessoas que trabalham de 40 a 65 horas
+
+Quais departamentos tem a média de horas mais constante entre esses valores?
+```{r}
+histogram(~HourlyRate | Department, data = dados, breaks = 20, col = "lightblue")
+densityplot(~HourlyRate | Department, data = dados, breaks = 20, col = "blue")
+```
+O departamento de vendas é claramente oq mais trabalha em média, sendo sua linha de densidade e seu histograma quase seguindo uma linha reta, sem oscilações grandes, talvez a sobrecarga em nosso funcionãrios de vendas tenha feito as demissões desse setor serem maiores, como vimos no gráfico acima.
+
+Qual setor que mais tem jovens de 20 a 35 trabalhando?
+```{r}
+histogram(~Age | Department, data = dados, col = "lightblue")
+histogram(~Age | Attrition, data = dados, col = "lightblue", breaks = 30)
+densityplot(~Age | Attrition, data = dados, col = "blue", breaks = 30)
+```
+O setor de vendas é o setor com maior concentração de pessoas jovens trabalhando, isso pode ter ligação com as demissões maiores nesse setor, já que os jovens de 20 até 35 anos se demitiram mais.
+
+
+Para finalizarmos essa ánalise superficial dos dados, vamos terminar plotando os gráficos finais que demonstram motivos maiores de demissões.
+```{r}
+histogram(~BusinessTravel | Attrition, data = dados, col = "lightblue", xlab = "Frequencia de viagens", ylab = "Porcentagem do total")
+histogram(~Department | Attrition, data = dados, col = "lightblue", xlab = "Departamento", ylab = "Porcentagem do total", layout = c(1,2))
+histogram(~Age | Attrition, data = dados, col = "lightblue", breaks = 20, xlab = "Idade", ylab = "Porcentagem do total")
+histogram(~JobSatisfaction | Attrition, data = dados, col = "lightblue", breaks = 3, xlab = "Nota de satisfação com o trabalho", ylab = "Porcentagem do total")
+histogram(~DistanceFromHome | Attrition, data = dados, col = "lightblue", breaks = 30, xlab = "Distância da casa para o trabalho", ylab = "Porcentagem do total")
+histogram(~HourlyRate | Attrition, data = dados, col = "lightblue", breaks = 20, xlab = "Horas trabalhadas por semana", ylab = "Porcentagem do total")
+histogram(~YearsAtCompany | Attrition, data = dados, col = "lightblue", breaks = 20, xlab = "Tempo na empresa", ylab = "Porcentagem do total")
+```
+Reunindo esses dados podemos com certeza ter uma melhora em questões demissionais na nossa empresa e entender melhor os motivos.
